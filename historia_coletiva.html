@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>História Coletiva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style2.css">
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <div class="game-header">
+            <h1 class="game-title">HISTÓRIA COLETIVA</h1>
+            <p class="game-subtitle">✨ Crie histórias incríveis com seus amigos! ✨</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-center mb-4" style="color: #667eea; font-weight: 700; font-size: 2rem;">🎭 Escolha um Tema</h3>
+                
+                <div class="theme-grid">
+                    <button class="theme-btn theme-halloween" onclick="selectTheme('Halloween')">🎃 Halloween</button>
+                    <button class="theme-btn theme-natal" onclick="selectTheme('Natal')">🎄 Natal</button>
+                    <button class="theme-btn theme-mulheres" onclick="selectTheme('Mulheres')">👩 Mulheres</button>
+                    <button class="theme-btn theme-isekai" onclick="selectTheme('Isekai')">🌟 Isekai</button>
+                    <button class="theme-btn theme-pascoa" onclick="selectTheme('Páscoa')">🐰 Páscoa</button>
+                    <button class="theme-btn theme-princesas" onclick="selectTheme('Princesas')">👑 Princesas</button>
+                    <button class="theme-btn theme-espaco" onclick="selectTheme('Espaço')">🚀 Espaço</button>
+                    <button class="theme-btn theme-fantasia" onclick="selectTheme('Fantasia')">🧙 Fantasia</button>
+                    <button class="theme-btn theme-natureza" onclick="selectTheme('Natureza')">🌿 Natureza</button>
+                    <button class="theme-btn theme-animais" onclick="selectTheme('Animais')">🦁 Animais</button>
+                    <button class="theme-btn theme-familia" onclick="selectTheme('Família')">👨‍👩‍👧 Família</button>
+                    <button class="theme-btn theme-bullying" onclick="selectTheme('Bullying')">🤝 Bullying</button>
+                    <button class="theme-btn theme-esportes" onclick="selectTheme('Esportes')">⚽ Esportes</button>
+                    <button class="theme-btn theme-games" onclick="selectTheme('Games')">🎮 Games</button>
+                </div>
+
+                <div id="gameArea" class="text-center" style="display: none;">
+                    <div class="word-display">
+                        <p class="current-word" id="currentWord">Preparar...</p>
+                        <div class="timer" id="timer"></div>
+                    </div>
+                    
+                    <button class="btn-game btn-start" id="startBtn" onclick="startGame()">▶ Começar</button>
+                    <button class="btn-game btn-stop" id="stopBtn" onclick="stopGame()" style="display: none;">⏹ Parar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 Como Jogar</h3>
+            <ol>
+                <li><strong>Escolha um tema</strong> que todos gostem</li>
+                <li><strong>Decidam a ordem</strong> de quem vai contar a história</li>
+                <li><strong>Comece o jogo</strong> - haverá uma contagem de 10 segundos</li>
+                <li><strong>Uma palavra aparecerá</strong> por 30 segundos na tela</li>
+                <li><strong>O primeiro jogador</strong> começa a história usando essa palavra</li>
+                <li><strong>Quando acabar o tempo</strong>, uma nova palavra aparece</li>
+                <li><strong>O próximo jogador</strong> continua a história com a nova palavra</li>
+                <li><strong>Continuem assim</strong> até criar uma história incrível juntos!</li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <p>Desenvolvido por Alexandre Nassar</p>
+        </div>
+    </div>
+
+    <script>
+        // Criar estrelas no fundo
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        const themes  = {
+    Familia: ['tradição','união','e as namoradinhas'
+,,'bolo da vó','é o preferido','briga'
+,'macarrão','rolo','confusão','truco','churrasco'
+,'domingo','grupo da família',,'valores'
+,'fofoca','tia fofoqueira','ninguém gosta'
+,'fazendo birra','traição','bizavô','vó','vô','velório','herança'
+,'ovelha negra','favorito','família'
+,'é pavê ou pá cumê','perdão','caloteiro','metido'
+,'metida','quer apostar?','faz um pix'
+,'eu duvido','desastrada','casamento','barraqueria','casa'
+,'prima','primo','grávida','solteira'
+,'velho','velha','harmonia','paciência'
+,'parceria','empatia','preocupado','invejosa'
+,'confiança','choramingar','ciumenta','castigo'
+,'dedo-duro'
+,'cheio de mania','te carreguei no colo'
+,'enquanto morar sob meu teto','você não é todo mundo'
+,'se eu for aí e achar','o dia que eu morrer','fuxiqueira'
+,'espalha roda','tiozão','mãe coruja','abraço','não conta pra ninguém'
+,'ela virou mocinha','guerra de almofadas'
+,'porque não é igual seu primo?','vai pra escola','igual sua cara'
+,'vai lavar louças','você não é todo mundo','vou contar até 3'
+,'na minha época','dormindo de novo','só fica no celular'
+,'vai apanhar','tal pai tal filho','se correr vai ser pior'
+,'filho de peixe','quem avisa amigo é'
+,'corre devagar','quem ama cuida','mãe é mãe','o que não mata engorda'
+,'há males que vem pro bem','ô mãããããe','não é você que paga'
+],
+    
+    JogosEsportes : [
+  "Jogos", "Esportes", "Competição", "Atletismo", "Futebol", "Basquete",
+  "Vôlei", "Tênis", "Natação", "Corrida", "Ginástica", "Ciclismo",
+  "Hóquei", "Golfe", "Rugby", "Boxe", "MMA", "Artes marciais",
+  "Skate", "Surfe", "Snowboard", "Esqui", "Escalada", "Canoagem",
+  "Remo", "Tiro com arco", "Pentatlo", "Triatlo", "Decatlo", "Heptatlo",
+  "Badminton", "Handebol", "Ginástica rítmica", "Ginástica artística",
+  "Ginástica aeróbica", "Ginástica acrobática", "Ginástica de trampolim",
+  "Lutas", "Judô", "Karatê", "Taekwondo", "Luta livre", "Luta greco-romana",
+  "Luta olímpica", "Luta de sumô", "Esportes de raquete", "Squash", "Raquetebol",
+  "Pickleball", "Esportes de combate", "Esportes aquáticos", "Esportes de equipe",
+  "Esportes individuais", "Esportes coletivos", "Esportes radicais", "Esportes de aventura",
+  "Esportes motorizados", "Esportes de inverno", "Esportes olímpicos", "Esportes paralímpicos",
+  "Atletas", "Técnicas", "Estratégias", "Táticas", "Treinamento", "Preparação física",
+  "Nutrição esportiva", "Lesões esportivas", "Reabilitação", "Condicionamento físico",
+  "Desempenho", "Resiliência", "Determinação", "Espírito esportivo", "Fair play",
+  "Equipe", "Capitão", "Técnico", "Árbitro", "Juiz", "Torcida", "Estádio",
+  "Arena", "Campo", "Quadra", "Pista", "Ringue", "Octógono", "Medalhas", "Troféus",
+  "Recordes", "Regras", "Regulamentos", "Competições", "Eventos esportivos", "Campeonatos",
+  "Olimpíadas", "Paraolimpíadas", "Copa do Mundo", "Olimpíadas Especiais",
+  "Corridas de rua", "Maratonas", "Trilhas", "Campeonatos escolares", "Intercâmbios esportivos",
+  "Patrocínio esportivo", "Marketing esportivo", "Indústria do esporte", "Profissionalismo",
+  "Amadorismo", "Amistoso", "Teste", "Treino", "Exercício físico", "Saúde e bem-estar",
+  "Vida saudável", "Benefícios do esporte", "Jogar limpo", "Comunidade esportiva"
+],
+palavrasBullying: [
+  "Bullying", "Assédio", "Abuso", "Violência", "Humilhação", "Intimidação",
+  "Agressão", "Insulto", "Discriminação", "Exclusão", "Constrangimento",
+  "Coerção", "Perseguição", "Preconceito", "Hostilidade", "Insegurança",
+  "Abandono", "Trauma", "Estigma", "Desrespeito", "Sofrimento", "Isolamento",
+  "Desequilíbrio de poder", "Ofensa", "Maltrato", "Conflito", "Desvalorização",
+  "Cyberbullying", "Tolerância zero", "Autoestima", "Autoconfiança", "Compaixão",
+  "Empatia", "Respeito", "Solidariedade", "Compreensão", "Igualdade", "Diversidade",
+  "Resiliência", "Apoio", "Amizade", "Aceitação", "Diálogo", "Prevenção",
+  "Consequências", "Responsabilidade", "Educação emocional", "Cultura de paz",
+  "Ambiente escolar", "Políticas anti-bullying", "Sensibilização", "Cibersegurança",
+  "Autocontrole", "Autoexpressão", "Intervenção", "Cooperação", "Relacionamentos saudáveis",
+  "Normas sociais", "Justiça", "Mediação", "Patrocínio", "Equidade",
+  "Resolução de conflitos", "Orientação", "Assertividade", "Compromisso", "Inclusão",
+  "Consciência", "Conformidade", "Empoderamento", "Proteção", "Política escolar",
+  "Trabalho em equipe", "Construção de comunidade", "Treinamento de habilidades sociais",
+  "Parcerias com os pais", "Advocacia", "Programas de mentoria", "Monitoramento",
+  "Atitudes positivas", "Autoavaliação", "Consciência digital", "Liderança estudantil",
+  "Integridade", "Abertura", "Autenticidade", "Coexistência", "Estratégias de coping",
+  "Autodisciplina", "Paz interior", "Respeito mútuo", "Atitudes proativas",
+  "Comunicação eficaz", "Equilíbrio emocional", "Empatia digital", "Normas comportamentais",
+  "Tolerância cultural", "Justiça restaurativa", "Mudança de cultura"
+],
+Gameplay : [
+  // Jogos de Tiro em Primeira Pessoa (FPS)
+  "FPS", "Arma", "Munição", "Recarregar", "Headshot", "Sniper", "Fuzileiro", 
+  "Assalto", "Defesa", "Ataque", "Camper", "Lançador de granadas", "Granada", 
+  "Equipamento", "Kit médico", "Kit de munição", "Rajada", "Mira", "Precisão", 
+  "Tático", "Estratégia", "Movimentação", "Esquiva", "Cover", "Camuflagem", 
+  "Armadilhas", "Explosivos", "Mapa", "Mini-mapa", "Ponto de controle", "Objetivo", 
+  "Missão", "Modo de jogo", "Deathmatch", "Capture the Flag", "Dominação", "Esquadrão", 
+  "Comando de voz", "Coordenação", "Competitivo", "Ranking", "Elo", "Pontuação", 
+  "Recompensas", "Desbloqueáveis", "Progressão", "Nível", "Experiência", "Desafios", 
+  "Conquistas", "Construção de equipe", "Estratégia de equipe", "Colaboração", "Combate corpo a corpo",
+  // Jogos de Aventurab
+  "Aventura", "Exploração", "Mundo aberto", "Mapa", "Companheiro", "Aliado", 
+  "Inimigo", "Chefe", "Monstro", "Criatura", "Masmorra", "Caverna", "Floresta", 
+  "Planície", "Montanha", "Cidade", "Vila", "NPC", "Missão secundária", "Explorar", 
+  "Descobrir", "Resolver quebra-cabeças", "Interagir", "Diálogo", "Escolhas", "Consequências", 
+  "História", "Narrativa", "Cinematografia", "Cenário", "Trilha sonora", "Imersão", "Suspense", 
+  "Tensão", "Sobrevivência", "Inventário", "Armas", "Equipamentos", "Crafting", "Coleta", 
+  "Pesquisa", "Escalada", "Salto", "Parkour", "Movimentação fluida", "Ambiente dinâmico", 
+  // Jogos de Futebol e Basquete
+  "Passe", "Chute", "Drible", "Gol", "Cesta", "Lance livre", "Falta", "Cartão amarelo", 
+  "Cartão vermelho", "Defesa", "Ataque", "Posicionamento", "Formação", "Estratégia de jogo", 
+  "Técnica", "Tática", "Marcação", "Desarme", "Rebote", "Enterrada", "Entrosamento", 
+  "Movimentação", "Marcação individual", "Marcação por zona", "Roubo de bola", "Transição", 
+  "Contra-ataque", "Finalização", "Assistência", "Goleiro", "Armador", "Ala", "Pivô", 
+  "Ponto", "Defensor", "Ofensivo", "Defensivo", "Capitão", "Substituição", "Tempo extra", 
+  "Prorrogação", "Disputa de pênaltis", "Campeonato", "Liga", "Torneio", "Partida amistosa", 
+  "Temporada", "Tabela", "Classificação", "Troféu", "Medalha", "Placar", "Juiz", "Árbitro"
+],
+
+    Animais: [
+    "Animal", "Mamífero", "Réptil", "Anfíbio", "Ave", "Peixe", "Inseto", "Artrópode", "Molusco", "Anelídeo",
+    "Cnidário", "Equinodermo", "Plâncton", "Baleia", "Tubarão", "Golfinho", "Orca", "Tartaruga", "Cobra",
+    "Jacaré", "Crocodilo", "Sapo", "Salamandra", "Rã", "Tritão", "Pássaro", "Aguia", "Falcão", "Coruja",
+    "Gavião", "Andorinha", "Pica-pau", "Tucano", "Pombo", "Gaivota", "Cisne", "Pato", "Ganso", "Peru",
+    "Frango", "Galinha", "Galo", "Pintinho", "Mamífero terrestre", "Elefante", "Leão", "Tigre", "Leopardo",
+    "Onça", "Pantera", "Jaguar", "Gato", "Cachorro", "Lobo", "Raposa", "Urso", "Panda", "Girafa",
+    "Hipopótamo", "Rinoceronte", "Camelo", "Cavalo", "Vaca", "Cabra", "Carneiro", "Porco", "Veado", "Alce",
+    "Antílope", "Cervo", "Coelho", "Rato", "Ratazana", "Esquilo", "Castor", "Texugo", "Doninha", "Lontra",
+    "Morcego", "Golfinho", "Baleia", "Orca", "Tubarão", "Polvo", "Lula", "Caranguejo", "Lagosta", "Camaronês",
+    "Formiga", "Abelha", "Vespa", "Borboleta", "Joaninha", "Libélula", "Gafanhoto", "Grilo", "Besouro", "Barata",
+    "Mosca", "Mosquito", "Percevejo", "Pulga", "Cupim", "Escorpião", "Aranha", "Centopéia", "Lagarta", "Tênia"
+],
+    Natureza: [
+    "Natureza", "Árvore", "Floresta", "Montanha", "Rio", "Lago", "Mar", "Oceano", "Praia", "Deserto",
+    "Cachoeira", "Nascente", "Córrego", "Floresta tropical", "Savana", "Tundra", "Taiga", "Pântano", "Mangue",
+    "Planície", "Vale", "Colina", "Clareira", "Selva", "Bosque", "Trilha", "Caminho", "Caverna", "Gruta",
+    "Formação rochosa", "Geleira", "Vulcão", "Cratera", "Arco-íris", "Nuvem", "Chuva", "Neblina", "Neve", "Granizo",
+    "Orvalho", "Geada", "Nevasca", "Trovão", "Relâmpago", "Sol", "Lua", "Estrela", "Céu", "Horizonte",
+    "Aurora boreal", "Aurora austral", "Galáxia", "Constelação", "Cometa", "Meteorito", "Eclipse", "Sistema solar",
+    "Planeta", "Lua", "Astronomia", "Ecossistema", "Biodiversidade", "Fauna", "Flora", "Recife de coral", "Atol",
+    "Duna", "Areia", "Rocha", "Pedra", "Solo", "Terra", "Planta", "Animal", "Inseto", "Réptil",
+    "Anfíbio", "Mamífero", "Ave", "Peixe", "Cacto", "Flor", "Água", "Ar", "Folha", "Raiz",
+    "Fruto", "Semente", "Galho", "Tronco", "Cipó", "Musgo", "Fungo", "Alga", "Gramínea", "Folhagem",
+    "Crescimento", "Decomposição", "Ciclo", "Erosão", "Polinização", "Germinação", "Fotossíntese", "Respiração", "Habitat",
+    "Adaptação", "Migração", "Estação", "Primavera", "Verão", "Outono", "Inverno", "Eco"
+],
+    halloween: [
+    "ABÓBORA", "FANTASMA", "BRUXA", "CEMITÉRIO", "VAMPIRO", "ASSOMBRAÇÃO",
+    "TRAVESSURA", "DOÇURA", "MORCEGO", "LUA", "CALDEIRÃO", "MAGIA", "MORCEGO",
+    "CAVEIRA", "ZUMBI", "ESQUELETO", "ARANHA", "TEIA", "NOITE", "SOMBRA", "VELA",
+    "MACABRO", "ESCURIDÃO", "MISTÉRIO", "ASSOMBRAÇÃO", "TERROR", "GRITO", "HOSPÍCIO",
+    "BRUXARIA", "CALABOUÇO", "ABANDONADO", "DEMÔNIO", "FANTASMAGÓRICO", "MALDIÇÃO",
+    "CASA", "MANSÃO", "LENDA", "SOBRENATURAL", "MEDO", "FOGO", "GRITO", "MONSTRO",
+    "DESGRAÇADO", "CALAFRIO", "DESAPARECIDO", "BIZARRO", "CORVO", "MÁGICO", "SINISTRO",
+    "ALMA", "FEITICEIRO", "CETRO", "BRUXEDO", "NECROMANCIA", "MALDITO", "LUA CHEIA",
+    "ABÓBORA", "CARNEIRA", "CRÂNIO", "VODU", "CREPÚSCULO", "CRENÇA", "NADA", "PAVOR",
+    "DESAPARECIDO", "ASSUSTADOR", "NOITE DE LUA CHEIA", "LUA NOVA", "NOITE ESCURA",
+    "LÁPIDE", "RITUAL", "FOGUEIRA", "ESPANTALHO", "LANTERNA", "VIGÍLIA", "BRUXEDO",
+    "VARA", "HOSPÍCIO", "BRUXULEANTE", "MACABRO", "MISTÉRIO", "OCULTO", "AFLITO",
+    "FERIADO", "TUMBA", "CEMITÉRIO", "MEDONHO", "CALAFRIO", "FANTASMAGÓRICO",
+    "LOBISOMEM", "ASSOMBRAÇÃO", "MAGIA NEGRA", "SOBRENATURAL"
+    ],
+
+    christmas: [
+    "NATAL", "PAPAI NOEL", "ÁRVORE", "PRESENTE", "RENAS", "BOLA", "LUZES", "ENFEITES", "GUIRLANDA",
+    "ESTRELA", "PRESÉPIO", "REI MAGO", "MANJEDOURA", "ANJO", "SINOS", "NEVE", "FLOCO", "CEIA", "FAMÍLIA",
+    "AMOR", "PAZ", "FELICIDADE", "ALEGRIA", "CELEBRAÇÃO", "ESPERANÇA", "REUNIÃO", "MÚSICA", 
+    "BISCOITOS", "CHOCOLATE QUENTE", "VINHO", "MEIAS", "SACO DE PRESENTES", "TRENÓ",
+    "DANÇA", "PATINAÇÃO NO GELO", "IGLU", "VELAS", "SAPATOS", "MEIA NOITE", "BRINCADEIRAS", "FILMES DE NATAL",
+    "CARTÕES", "DOCES", "PAPAI NOEL FALANDO", "PATINHO DE NATAL", "BENGALAS DE DOCES",
+    "BOLACHAS DE GENGIBRE", "ESTALO", "ACONCHEGO", "DAR", "RECEBER", "DECORAÇÕES", "CHESTER", "FESTÃO",
+    "GRINALDA", "VÉSPERA DE NATAL", "NOITE DE NATAL", "DECORAÇÕES DE NATAL", "FLOCOS DE NEVE", "JINGLE BELLS",
+    "CANÇÃO DE NATAL", "CONTOS DE NATAL", "RECEITAS DE NATAL", "MERCADO DE NATAL", "VISITANTES", "CARRILHÃO",
+    "PREGADOR", "ESTRELA DO MAR", "RENASCIMENTO", "ESFERA DE NATAL", "SAIA DE ÁRVORE DE NATAL", "TAMPÃO DE ÁRVORE",
+    "VÉSPERA DE NATAL", "CANTATA", "LAREIRA", "CHAMINÉ", "FESTA DE NATAL", "FLOCO DE NEVE", "CARTEIRO", "UNIÃO",
+    "NATALÍCIO", "TRADIÇÃO", "FLOCO DE NEVE", "TIJOLO", "NATAL", "ELFOS", "NEVASCA", "GRINCH",
+    "ROSA", "FLOCO DE NEVE", "TROCA DE PRESENTES", "PÉ GRANDE"
+    ],
+
+    Mulheres: ["Mulher", "Feminismo", "Igualdade", "Direitos", "Empoderamento", "Liberdade", "Gênero", 
+    "Forte", "Independência", "Respeito", "Diversidade", "Família", "Maternidade", "Carreira", "Sucesso", "Inspiração", 
+    "Coragem", "Determinação", "Conquista", "Luta", "Solidariedade", "Sororidade", "Feminina", "Revolução", "Feminista", 
+    "Ativista", "Poder", "Crescimento", "Educação", "Trabalho", "Profissionalismo", "Ambição", "Conquista", "Equidade", 
+    "Justiça", "Feminilidade", "Beleza", "Autoestima", "Autoconfiança", "Autoaceitação", "Coragem", "Inspiração", 
+    "Liderança", "Empatia", "Inclusão", "Diversidade", "Revolução", "Ativismo", "Resiliência", "Superação", "Orgulho", 
+    "Celebração", "Celebração", "Comunidade", "Consciência", "Integridade", "Honestidade", "Valentia", "Bravura", "Generosidade", 
+    "Esperança", "Amor", "Altruísmo", "Compaixão", "Paixão", "Voz", "Expressão", "Arte", "Cultura", "História", "Memória", "Legado", 
+    "Contribuição", "Reconhecimento", "Apreciação", "Admiração", "Respeito", "Gratidão", "Honra", "Sucesso", "Progresso", "Transformação", 
+    "Inovação", "Avanço", "Crescimento", "Desenvolvimento", "Futuro", "Inspiração"
+    ],
+
+    Isekai: ["Isekai", "Mundo paralelo", "Fantasia", "Aventura", "Herói", "Protagonista", "Reencarnação",
+    "Transportado para outro mundo", "Magia", "Guilda", "Monstros", "Criaturas", "Espadas", "Feitiçaria", "Poderes",
+     "Missões", "RPG", "Jogo", "Nível", "Avatar", "Magia elemental", "Raças", "Elfos", "Anões", "Humanos", "Bestas", 
+     "Demônios", "Dragões", "Invocação", "Habilidades", "Treinamento", "Nível", "NPC", "Comédia", "Romance", 
+     "Escola", "Vida escolar", "Slice of life", "Realeza", "Vilão", "Anti-herói", "Viagem no tempo", 
+     "Paradoxo temporal", "Civilização ", "Deus", "Divindades", "Magia negra", "Magia branca", "Magia do caos", 
+     "Aventura épica", "Guerra", "Conflito", "Aliados", "Inimigos", "Batalha", "Armas", "Armaduras", "Taverna", "Grimório", 
+     "Lenda", "Profecia", "Salvador", "Salvação", "Destino", "Mistério", "Segredo", "Poder oculto", "Trevas", "Luz", 
+     "Coração", "Alma", "Coração partido", "Jornada", "Desafio", "Treinamento", "Ascensão", "Queda", "Redenção", "Heroísmo", 
+     "Sobrevivência", "Exploração", "Descoberta", "Aprendizagem", "Evolução", "Adaptação", "Integração", "Amizade", "Laços", 
+     "Afeição", "Aventura", "Descoberta", "Desenvolvimento", "Crescimento", "Aprimoramento", "Transformação", "Desafio", "Conquista"
+    ],
+
+     Pascoa: ["Páscoa","Ressurreição","Cristo","Coelho","Ovos","Chocolate","Renascimento","Fé","Celebração",
+     "Tradição","Família","Amor","Esperança","Aleluia","Reunião","Primavera","Páscoa judaica","Religião","Espiritualidade",
+     "Bênção","Gratidão","Comemoração","Vida nova","Sacrifício","Jesus","Cruz","União","Partilha","Amizade","Doçura",
+     "Iluminação","Harmonia","Reflexão","Bênção","Paz","Deus","Encontro","Festividade","Louvor","Benção","Recomeço",
+     "Oração","Alegria","Coração","Alma","Redenção","Esperança","Tradição","Divindade","Misericórdia","Salvação","Palavra",
+     "Vontade","Eterno","Comunhão","Devoção","Santidade","Caminho","Perdão","Graça","Eucaristia","Amém","Santo","Louvor",
+     "Respeito","Piedade","Adoração","Felicidade","Misericórdia","Renovação","Celestial","Evangelho","Jerusalém","Batismo",
+     "Renascido","Canto","Glória","Aurora","Amanhecer","Esperança","Exaltação","Iluminado","Maravilha","Luz","Palavra",
+     "Proclamação","Recomeço","Unidade","Triunfo","Vitória","Vida","Vivo","Céu","Santo","Peregrinação","Acolhimento",
+     "Humildade","Piedade","Serviço","Mistério","Revelação"
+    ],
+    
+    Princesas: [
+    "Princesa", "Castelo", "Reino", "Príncipe", "Rainha", "Rei", "Fada", "Magia", "Encantamento", "Amor",
+    "Cavaleiro", "Coroa", "Baile", "Vestido", "Bruxa", "Floresta", "Bosque", "Encantado", "Mágico", "Dragão",
+    "Poção", "Espada", "Coragem", "Aventura", "Fantasia", "Tesouro", "Cavalo", "Jardim", "Prado", "Princesinha",
+    "Sonho", "Destino", "Magia negra", "Varinha", "Encantadora", "Encanto", "Beijo", "Sapatinho de cristal", "Dama",
+    "Valente", "Fortaleza", "Nobre", "Maldição", "Herói", "Batalha", "Resgate", "Esperança", "Sorte", "Trono",
+    "Trombeta", "Festividade", "Justiça", "Mistério", "Trompete", "Alegria", "Anel", "Romance", "Emoção", "Soberano",
+    "Magistral", "Lealdade", "Honra", "Brilho", "Esplendor", "Rainha má", "Passagem secreta", "Guarda", "Estrela",
+    "Lua", "Sol", "Felicidade", "Encanto celestial", "Suspiro", "Destemida", "Princesa corajosa", "Amizade", "Compaixão",
+    "Esperança", "Amor verdadeiro", "Alegria", "Laço", "Festa", "Fada madrinha", "Sonhadora", "Resplandecente", "Encantadora",
+    "Felicidade", "Magia pura", "Magia celestial", "Encanto eterno", "Belo", "Doce", "Encanto radiante", "Glória",
+    "Dama encantadora", "Encanto dourado", "Nobreza", "Supremacia", "Pureza", "Encanto interminável"
+    ],
+
+    Espaco: [
+"Espaço", "Universo", "Estrela", "Planeta", "Lua", "Sol", "Sistema solar", "Galáxia", "Nebulosa", "Cometa",
+"Asteróide", "Meteorito", "Constelação", "Nave espacial", "Astronauta", "Exploração espacial", "Cosmos",
+"Gravidade", "Órbita", "Satélite", "Lua cheia", "Lua crescente", "Lua nova", "Lua minguante", "Eclipse",
+"Fase lunar", "Lua de sangue", "Lua azul", "Lua de colheita", "Lua negra", "Lua gibosa", "Lua de neve",
+"Lua de lobo", "Lua rosa", "Lua de gelo", "Lua de fogo", "Lua de outono", "Lua de primavera", "Lua de verão",
+"Lua de inverno", "Lua azul", "Lua de março", "Lua de abril", "Lua de maio", "Lua de junho", "Lua de julho",
+"Lua de agosto", "Lua de setembro", "Lua de outubro", "Lua de novembro", "Lua de dezembro", "Aurora boreal",
+"Aurora austral", "Estação espacial", "Telescópio", "Marte", "Júpiter", "Saturno", "Vênus",
+"Mercúrio", "Urano", "Netuno", "Plutão", "Terra", "Atmosfera", "Lua", "Cratera", "Asteróide", "Eclipses",
+"Buraco negro", "Buraco de minhoca", "Nave interestelar", "Colonização espacial", "Extraterrestre", "Vida alienígena",
+"Missão espacial", "Viagem interestelar", "Big Bang", "Cosmonauta", "Rover", "Módulo lunar", "Gravidade zero",
+"Estação orbital", "Planeta anão", "Exoplaneta", "Planeta gigante", "Anéis planetários", "Lua artificial",
+"Estrela de nêutrons", "Pulsar", "Supernova", "Buraco negro", "Nuvem interestelar", "Estrela binária",
+"Estrela de plasma", "Estrela em formação", "Via Láctea", "Espectroscopia", "Efeito Doppler", "Radiação cósmica",
+"Colisão cósmica", "Estação espacial", "Turismo espacial", "Asteróide", "Meteorito", "Desvio orbital", "Atrator gravitacional"
+],
+
+Fadas: [
+"Conto de fadas", "Fada", "Rei", "Rainha", "Castelo", "Reino", "Floresta encantada",
+"Bruxa", "Feiticeiro", "Dragão", "Cavaleiro", "Magia", "Varinha mágica", "Poção mágica", "Encantamento",
+"Maldição", "Animais falantes", "Princesa", "Príncipe", "Espelho mágico", "Maçã envenenada", "Carruagem mágica", 
+"Escudo encantado", "Ponte levadiça", "Torre", "Pântano", "Jardim encantado", "Baú de tesouro", "Fonte dos desejos",
+"Ponte mágica", "Floresta sombria", "Túnel misterioso", "Montanha proibida", "Portal mágico", "Portão do castelo",
+"Lago dos cisnes", "Trilha encantada", "Caverna oculta", "Torre de marfim", "Ponte dos trolls", "Caminho das fadas",
+"Caminho de tijolos dourados", "Gruta secreta", "Caldeirão mágico", "Ponte do arco-íris", "Ilha dos piratas",
+"Moinho abandonado", "Casa de doces", "Casa de gengibre", "Túnel do tempo", "Sino da liberdade", "Porta da eternidade",
+"Névoa encantada", "Montanha da perdição", "Planície dos unicórnios", "Rio de estrelas", "Ponte do destino",
+"Vale dos sonhos", "Pântano da tristeza", "Casa da bruxa", "Caverna do dragão", "Labirinto encantado", "Floresta negra",
+"Lago dos espelhos", "Vale das sombras", "Caminho da lua", "Fonte da juventude", "Sino dos desejos", "Vale dos lamentos",
+"Castelo das nuvens", "Ponte do abismo", "Vale das bruxas", "Lago dos sonhos", "Ponte da amizade", "Montanha dos desafios",
+"Casa do terror", "Caverna dos segredos", "Labirinto do medo", "Castelo do rei", "Torre da princesa", "Sala do trono",
+"Jardim do palácio", "Praça do mercado", "Cidade dos elfos", "Bosque das fadas", "Vale dos dragões", "Terra encantada",
+"Ilha perdida", "Mar de estrelas", "Vale das lágrimas", "Casa do mistério", "Vila dos duendes", "Terra dos gigantes",
+"Reino subterrâneo", "Caminho da aventura", "Torre do feiticeiro", "Portal da magia", "Cidade dos sonhos", "Vale das ilusões"
+]
+};
+
+        let selectedTheme = null;
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let gameInterval = null;
+        let timeLeft = 30;
+        let isCountdown = false;
+
+        function selectTheme(theme) {
+            selectedTheme = theme;
+            currentWords = [...themes[theme]];
+            shuffleArray(currentWords);
+            currentWordIndex = 0;
+            
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('currentWord').textContent = `Tema: ${theme}`;
+            document.getElementById('timer').textContent = '';
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('stopBtn').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('gameArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startGame() {
+            if (!selectedTheme) return;
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-block';
+            
+            startCountdown();
+        }
+
+        function startCountdown() {
+            isCountdown = true;
+            let count = 10;
+            document.getElementById('currentWord').textContent = 'Preparem-se!';
+            document.getElementById('currentWord').className = 'countdown-display';
+            document.getElementById('timer').textContent = count;
+            
+            gameInterval = setInterval(() => {
+                count--;
+                document.getElementById('timer').textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(gameInterval);
+                    isCountdown = false;
+                    document.getElementById('currentWord').className = 'current-word';
+                    showNextWord();
+                }
+            }, 1000);
+        }
+
+        function showNextWord() {
+            if (currentWordIndex >= currentWords.length) {
+                currentWords = [...themes[selectedTheme]];
+                shuffleArray(currentWords);
+                currentWordIndex = 0;
+            }
+            
+            document.getElementById('currentWord').textContent = currentWords[currentWordIndex];
+            currentWordIndex++;
+            timeLeft = 30;
+            
+            updateTimer();
+        }
+
+        function updateTimer() {
+            document.getElementById('timer').textContent = timeLeft + 's';
+            
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft + 's';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    showNextWord();
+                }
+            }, 1000);
+        }
+
+        function stopGame() {
+            clearInterval(gameInterval);
+            document.getElementById('currentWord').textContent = `Tema: ${selectedTheme}`;
+            document.getElementById('timer').textContent = '';
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('stopBtn').style.display = 'none';
+            currentWordIndex = 0;
+            shuffleArray(currentWords);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+ @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin: 30px 0;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .game-title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 700;
+            color: white;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .theme-btn {
+            padding: 20px 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .theme-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .theme-halloween { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        .theme-natal { background: linear-gradient(135deg, #c94b4b 0%, #4b134f 100%); }
+        .theme-mulheres { background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%); }
+        .theme-isekai { background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%); }
+        .theme-pascoa { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        .theme-princesas { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .theme-espaco { background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%); }
+        .theme-fantasia { background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); }
+        .theme-natureza { background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%); }
+        .theme-animais { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .theme-familia { background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); }
+        .theme-bullying { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .theme-esportes { background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%); }
+        .theme-games { background: linear-gradient(135deg, #00d2ff 0%, #3a47d5 100%); }
+
+        .word-display {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            margin: 30px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .current-word {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            margin: 0;
+            animation: wordAppear 0.5s ease;
+        }
+
+        @keyframes wordAppear {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .timer {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            color: white;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.5);
+            margin-top: 20px;
+        }
+
+        .countdown-display {
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            animation: countdownPulse 1s infinite ease-in-out;
+        }
+
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .btn-game {
+            padding: 18px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .btn-game:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .btn-game:active {
+            transform: translateY(-1px);
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #f5576c 100%, #f093fb 0%);
+            padding: 30px;
+            border-radius: 20px;
+            color: white;
+            margin: 30px 0;
+        }
+
+        .instructions h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .instructions li {
+            font-size: 1.1rem;
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 25px;
+            }
+            
+            .theme-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+            }
+        }
